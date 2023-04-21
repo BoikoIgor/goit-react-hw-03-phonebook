@@ -4,6 +4,7 @@ import { GlobalStyle } from './GlobalStyle';
 import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
+import { Filter } from './Filter/Filter';
 
 export class App extends Component {
   state = {
@@ -13,37 +14,55 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
-    name: '',
+    filter: '',
   };
-  formSubmitHandler = ({ name, number }) => {
-    this.setState(prevState => {
-      return {
-        contacts: [
-          ...prevState.contacts,
-          {
-            id: nanoid(),
-            name: name,
-            number: number,
-          },
-        ],
-      };
-    });
+  addContact = ({ name, number }) => {
+    this.state.contacts.some(
+      contact => contact.name.toLocaleLowerCase() === name.toLocaleLowerCase()
+    )
+      ? alert(`${name} is already in contacts`)
+      : this.setState(prevState => {
+          return {
+            contacts: [
+              ...prevState.contacts,
+              {
+                id: nanoid(),
+                name: name,
+                number: number,
+              },
+            ],
+          };
+        });
   };
+  onChangeInput = evt => {
+    const { name, value } = evt.currentTarget;
+    this.setState({ [name]: value });
+  };
+  filter = () => {
+    const { contacts, filter } = this.state;
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+    return filteredContacts;
+  };
+  delContact = id => {
+    const filtred = this.state.contacts.filter(contact => contact.id !== id);
+    this.setState({ contacts: filtred });
+  };
+
   render() {
-    // const { value } = this.state.name;
     return (
       <Layout>
         <div>
           <h1>Phonebook</h1>
-          <ContactForm
-            // value={this.state.name}
-            // onChange={this.handleChange}
-            onSubmit={this.formSubmitHandler}
-          />
+          <ContactForm onSubmit={this.addContact} />
 
           <h2>Contacts</h2>
-          {/* <Filter ... /> */}
-          <ContactList contacts={this.state.contacts} />
+          <Filter
+            filter={this.state.filter}
+            onChangeInput={this.onChangeInput}
+          />
+          <ContactList contacts={this.filter()} delContact={this.delContact} />
         </div>
         <GlobalStyle />
       </Layout>
