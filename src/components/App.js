@@ -1,7 +1,9 @@
 import { Component } from 'react';
 import { Layout } from './Layout/Layout';
 import { GlobalStyle } from './GlobalStyle';
-
+import { nanoid } from 'nanoid';
+import { ContactForm } from './ContactForm/ContactForm';
+import { ContactList } from './ContactList/ContactList';
 export class App extends Component {
   state = {
     contacts: [
@@ -12,17 +14,35 @@ export class App extends Component {
     ],
     name: '',
   };
-
+  formSubmitHandler = ({ name, number }) => {
+    this.setState(prevState => {
+      return {
+        contacts: [
+          ...prevState.contacts,
+          {
+            id: nanoid(),
+            name: name,
+            number: number,
+          },
+        ],
+      };
+    });
+  };
   render() {
+    // const { value } = this.state.name;
     return (
       <Layout>
         <div>
           <h1>Phonebook</h1>
-          {/* <ContactForm ... /> */}
+          <ContactForm
+            // value={this.state.name}
+            // onChange={this.handleChange}
+            onSubmit={this.formSubmitHandler}
+          />
 
           <h2>Contacts</h2>
-          {/* <Filter ... />
-        <ContactList ... /> */}
+          {/* <Filter ... /> */}
+          <ContactList contacts={this.state.contacts} />
         </div>
         <GlobalStyle />
       </Layout>
