@@ -16,11 +16,6 @@ code {
     monospace;
 }
 
-/* p {
-  margin: 1rem 0;
-  font-weight: bold;
-} */
-
 ul, ol {
   margin: 0;
   padding: 0;
