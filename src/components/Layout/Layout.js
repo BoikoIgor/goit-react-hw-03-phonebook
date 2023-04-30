@@ -5,5 +5,5 @@ export const Layout = ({ children }) => {
   return <Container>{children}</Container>;
 };
 Layout.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.any.isRequired,
 };
